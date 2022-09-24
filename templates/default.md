@@ -1,0 +1,6 @@
+# Journal $DATE
+
+## Events
+
+## Discussion
+
