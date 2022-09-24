@@ -1,4 +1,5 @@
 # Journal $DATE
+#journal
 
 ## Events
 
