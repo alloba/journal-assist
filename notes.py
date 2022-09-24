@@ -10,7 +10,7 @@ import subprocess
 TODAY = str(date.today())  # formatted like YYYY-MM-DD
 FILE_EXT = ".md"
 TEMPLATE = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'templates/default.md')
-REMOTE_FLAG = False  # used for testing. if false, skip pushing commits to remote.
+REMOTE_FLAG = True  # used for testing. if false, skip pushing commits to remote.
 
 
 def print_help_message():
@@ -53,31 +53,31 @@ if __name__ != "__main__":
     print("Not supported to run as imported resource")
     sys.exit(1)
 
-else:
-    if len(sys.argv) != 3:
-        print_help_message()
-        sys.exit(1)
 
-    rootDir = os.path.realpath(os.path.expanduser(sys.argv[1]))
-    journalDirectory = os.path.abspath(os.path.expanduser(sys.argv[2]))
-    journalFilePath = os.path.join(journalDirectory, TODAY + FILE_EXT)
+if len(sys.argv) != 3:
+    print_help_message()
+    sys.exit(1)
 
-    if not os.path.exists(rootDir):
-        print(f'Provided directory does not exist: {rootDir}')
-        sys.exit(1)
-    if not os.path.exists(journalDirectory):
-        print(f'Provided directory does not exist: {journalDirectory}')
-        sys.exit(1)
+rootDir = os.path.realpath(os.path.expanduser(sys.argv[1]))
+journalDirectory = os.path.abspath(os.path.expanduser(sys.argv[2]))
+journalFilePath = os.path.join(journalDirectory, TODAY + FILE_EXT)
 
-    dirfiles = [os.path.join(journalDirectory, f) for f in os.listdir(journalDirectory) if
-                os.path.isfile(os.path.join(journalDirectory, f))]
+if not os.path.exists(rootDir):
+    print(f'Provided directory does not exist: {rootDir}')
+    sys.exit(1)
+if not os.path.exists(journalDirectory):
+    print(f'Provided directory does not exist: {journalDirectory}')
+    sys.exit(1)
 
-    if journalFilePath not in dirfiles:
-        print(f'Journal file {journalFilePath} does not exist. Creating.')
-        create_journal_file(journalFilePath, TEMPLATE)
+dirfiles = [os.path.join(journalDirectory, f) for f in os.listdir(journalDirectory) if
+            os.path.isfile(os.path.join(journalDirectory, f))]
 
-    trigger_edit_journal_file(journalFilePath)
-    trigger_track_journal_file(rootDir, journalFilePath)
-    trigger_commit(rootDir)
-    trigger_push_to_remote(rootDir)
-    print(f'Completed journal edit for {TODAY}{FILE_EXT}')
+if journalFilePath not in dirfiles:
+    print(f'Journal file {journalFilePath} does not exist. Creating.')
+    create_journal_file(journalFilePath, TEMPLATE)
+
+trigger_edit_journal_file(journalFilePath)
+trigger_track_journal_file(rootDir, journalFilePath)
+trigger_commit(rootDir)
+trigger_push_to_remote(rootDir)
+print(f'Completed journal edit for {TODAY}{FILE_EXT}')
