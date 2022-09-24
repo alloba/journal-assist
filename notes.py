@@ -30,6 +30,9 @@ def create_journal_file(filepath, templatepath):
     target_file.write(template.substitute(r))
     target_file.close()
 
+def trigger_pull_from_remote(root_project_directory): 
+    subprocess.call(f'git -C {root_project_directory} fetch')
+    subprocess.call(f'git -C {root_project_directory} pull')
 
 def trigger_edit_journal_file(filepath):
     subprocess.run(f"nvim {filepath}")
@@ -65,13 +68,15 @@ journalFilePath = os.path.join(journalDirectory, TODAY + FILE_EXT)
 if not os.path.exists(rootDir):
     print(f'Provided directory does not exist: {rootDir}')
     sys.exit(1)
+
 if not os.path.exists(journalDirectory):
     print(f'Provided directory does not exist: {journalDirectory}')
     sys.exit(1)
 
+trigger_pull_from_remote(rootDir)
+
 dirfiles = [os.path.join(journalDirectory, f) for f in os.listdir(journalDirectory) if
             os.path.isfile(os.path.join(journalDirectory, f))]
-
 if journalFilePath not in dirfiles:
     print(f'Journal file {journalFilePath} does not exist. Creating.')
     create_journal_file(journalFilePath, TEMPLATE)
