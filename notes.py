@@ -81,4 +81,3 @@ else:
     trigger_commit(rootDir)
     trigger_push_to_remote(rootDir)
     print(f'Completed journal edit for {TODAY}{FILE_EXT}')
-    
