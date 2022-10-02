@@ -10,6 +10,8 @@ import subprocess
 TODAY = str(date.today())  # formatted like YYYY-MM-DD
 FILE_EXT = ".md"
 TEMPLATE = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'templates/default.md')
+
+NO_GIT = False  # skip all git operations if true.  
 REMOTE_FLAG = True  # used for testing. if false, skip pushing commits to remote.
 
 
@@ -31,25 +33,36 @@ def create_journal_file(filepath, templatepath):
     target_file.close()
 
 def trigger_pull_from_remote(root_project_directory): 
+    if NO_GIT: 
+        print('trigger_pull_from_remote skipped')
+        return 
     subprocess.call(f'git -C {root_project_directory} fetch')
     subprocess.call(f'git -C {root_project_directory} pull')
 
-def trigger_edit_journal_file(filepath):
-    subprocess.run(f"nvim {filepath}")
+def trigger_edit_journal_file(filepath, starting_line=0):
+    subprocess.run(f"nvim {filepath} +{starting_line}")
 
 
 def trigger_track_journal_file(root_project_directory, filepath):
+    if NO_GIT: 
+        print('trigger_track_journal_file skipped')
+        return 
     subprocess.call(f'git -C {root_project_directory} add {filepath}')
 
 
 def trigger_commit(root_project_directory):
+    if NO_GIT: 
+        print('trigger_commit skipped')
+        return 
     commit_message = f'updated journal file for {TODAY}'
     subprocess.call(f'git -C {root_project_directory} commit -m "{commit_message}"')
 
 
 def trigger_push_to_remote(root_project_directory):
-    if REMOTE_FLAG:
-        subprocess.call(f'git -C {root_project_directory} push')
+    if NO_GIT or not REMOTE_FLAG: 
+        print('trigger_push_to_remote skipped')
+        return 
+    subprocess.call(f'git -C {root_project_directory} push')
 
 
 if __name__ != "__main__":
@@ -77,6 +90,7 @@ trigger_pull_from_remote(rootDir)
 
 dirfiles = [os.path.join(journalDirectory, f) for f in os.listdir(journalDirectory) if
             os.path.isfile(os.path.join(journalDirectory, f))]
+
 if journalFilePath not in dirfiles:
     print(f'Journal file {journalFilePath} does not exist. Creating.')
     create_journal_file(journalFilePath, TEMPLATE)
