@@ -13,7 +13,7 @@ TEMPLATE = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'templates/
 
 NO_GIT = False  # skip all git operations if true.  
 REMOTE_FLAG = True  # used for testing. if false, skip pushing commits to remote.
-
+NO_EDITOR = False 
 
 def print_help_message():
     print("""
@@ -40,6 +40,8 @@ def trigger_pull_from_remote(root_project_directory):
     subprocess.call(f'git -C {root_project_directory} pull')
 
 def trigger_edit_journal_file(filepath, starting_line=0):
+    if NO_EDITOR: 
+        return 
     subprocess.run(f"nvim {filepath} +{starting_line}")
 
 
