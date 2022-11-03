@@ -3,5 +3,4 @@
 
 ## Events
 
-## Discussion
 
