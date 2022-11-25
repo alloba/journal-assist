@@ -15,6 +15,8 @@ NO_GIT = False  # skip all git operations if true.
 REMOTE_FLAG = True  # used for testing. if false, skip pushing commits to remote.
 NO_EDITOR = False 
 
+# TODO: I'd rather be able to provide default paths in the environment for the required arguments. 
+#       It would make it less of a pain to set up (would just have to add them to a terminal profile)
 def print_help_message():
     print("""
             journal-assist 
